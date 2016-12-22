@@ -84,7 +84,6 @@ plot_lb(result,'m','m','m')
 
 % test the cv_lb.m function for binomial distribution
 alpha = [ones(1,30), zeros(1,70)];
-% y <- 2*as.numeric(runif(500)<1/(1+exp(-X %*% alpha)))-1
 y = 2*(rand(500,1)<(1/(1+exp(-X*alpha')))')-1;
 figure
 cv_lb(X,y,5,1,'m','m','m','m','binomial','m',false,false,'m','m','m',@lb,@predict_lb,@lb_lasso,@lb_logistic,@lb_multi_logistic)
