@@ -17,6 +17,8 @@ function object = cv_iss(X,y,K,t,intercept,normalize,plot_it,se,iss,predict)
 % Output:
 % A structure array is returned. The struct contains a vector of parameter t, crossvalidation error cv_error, and the estimated standard deviation for it cv_sd
 
+
+%% check if there are undetermined values
 if (ischar(K))
     K = 5;
 end
@@ -33,6 +35,7 @@ if (ischar(se))
     se = true;
 end
 
+%% check if inputs are elligible
 if (~ismatrix(X) || ~isvector(y))
     error('X must be a matrix and y must be a vector')
 end
@@ -40,6 +43,7 @@ if (size(X,1) ~= length(y))
     error('Number of rows of X must equal to the length of y')
 end
 
+%% initialize and generate folds
 n = size(X,1);
 si = floor(n/K);
 mo = n-K*si;
@@ -77,6 +81,7 @@ if (t == 'm')
     t = linspace(1,100,100)/max(abs(y'*X))*n;
 end
 
+%% run the iss algorithm and do cross validation
 residmat = zeros(length(t),K);
 for i = 1:K
     omit = folds(i).group;
@@ -102,7 +107,7 @@ end
 cv_error = sum(residmat,2)/size(residmat,2);
 cv_sd = sqrt(var(residmat,0,2)/K);
 
-
+%% plot and generate 'cv_iss' class object
 if (plot_it)
     plot(t,cv_error)
     %ylim([cv_error+cv_sd, cv_error-cv_sd])
@@ -114,7 +119,7 @@ if (se)
     plot([t;t],[cv_error'+cv_sd';cv_error'-cv_sd'],'r')
 end
 
-field = 'iss';
+field = 'cv_iss';
 value = {t,cv_error,cv_sd};
 object = struct(field,value);
 end

@@ -39,7 +39,7 @@ function object = lb(X,y,kappa,alpha,c,tlist,nt,trate,family,group,index,interce
 % A structure array with fields: function call, family, path, intercept,
 % alpha, kappa, t, meanx, normx, group
 
-
+%% check if there are undetermined variables
 if (ischar(nt))
     nt = 100;
 end
@@ -62,6 +62,7 @@ if (ischar(print))
     print = false;
 end
 
+%% check if there are inelligible values
 if (~ismatrix(X))
     error('X must be a matrix!')
 end
@@ -135,6 +136,7 @@ if (group)
     end
 end
 
+%% initialization
 n = size(X,1);
 p = size(X,2);
 one = ones(1,n);
@@ -184,6 +186,7 @@ if (intercept && ~normalize)
     alpha0_rate = max(squeeze(one*(X.^2)))/n;
 end
 
+%% use helper functions to implement the main 'lb' algorithm
 if (strcmp(family, 'gaussian'))
     object = lb_lasso(X,y',kappa,alpha,alpha0_rate,tlist,nt,trate,intercept,group,index,print,meanx,normx);
 elseif (strcmp(family,'binomial'))
@@ -194,6 +197,7 @@ else
     error('No such family type!')
 end
 
+%% post-handle and process data, complete the 'lb' class object
 if (intercept)
     if (~strcmp(family,'multinomail'))
         object(4).lb = object(3).lb(p+1,:);

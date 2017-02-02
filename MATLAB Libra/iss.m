@@ -18,6 +18,7 @@ function object = iss(X,y,intercept,normalize,nvar)
 % A structure array with fields: function call, family, path, intercept,
 % alpha, kappa, t, meanx, normx, group
 
+%% check if there are undetermined values
 if (ischar(intercept))
     intercept = true;
 end
@@ -28,12 +29,15 @@ if (ischar(nvar))
     nvar = min(size(X));
 end
 
+%% check if there are illegible variables
 if (~ismatrix(X) || ~isvector(y))
     error('X must be a matrix and y must be a vector')
 end
 if (size(X,1) ~= length(y))
     error('Number of rows of X must equal to the length of y')
 end
+
+%% initialization
 n = size(X,1);
 p = size(X,2);
 one = ones(1,n);
@@ -66,6 +70,8 @@ active = false(1,p);
 t = 0;
 hist_t = zeros(1,maxitr+1);
 hist_path = zeros(maxitr+1,p);
+
+%% Main step for the iss algorithm
 for i = 1:maxitr
     use = i;
     ng = X'*res;
@@ -109,6 +115,7 @@ hist_path = hist_path';
 a0 = mu-meanx*hist_path;
 hist_t = hist_t(linspace(1,use+1,use+1))*n;
 
+%% build 'lb' class object
 call = 'iss';
 field = 'lb';
 family = 'gaussian';

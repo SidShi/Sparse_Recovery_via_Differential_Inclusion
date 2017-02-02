@@ -14,6 +14,7 @@ function plot_lb(x, xtype, omit_zeros, eps)
 % Output:
 % none, just do the plot
 
+%% check if there are undetermined values
 if (xtype == 'm')
     xtype = 't';
 end
@@ -24,6 +25,7 @@ if (ischar(eps))
     eps = 10^(-10);
 end
 
+%% Retrieve values
 object = x;
 if (~strcmp(object(2).lb, 'multinomial'))
     coef = object(3).lb;
@@ -53,6 +55,7 @@ else
     s = s/max(s);
 end
 
+%% do the plot
 if (object(6).lb == Inf)
     for i = 1:size(coef,1)
         stairs(s,coef(i,:))
@@ -65,6 +68,5 @@ else
     end
 end
 plot(0:ceil(max(s)),zeros(1,ceil(max(s))+1))
-%ylim([min(coef),max(coef)])
 
 end

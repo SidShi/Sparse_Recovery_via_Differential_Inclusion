@@ -18,6 +18,7 @@ function pre = predict_lb(object, newx, t, type)
 % the probabilities for newx falling into the corresponding class. If type="coefficients"
 % coefficients "beta" and intercepts "a0" are returned.
 
+%% check if there are undetermined values
 if (ischar(type))
     type = 'fit';
 end
@@ -26,6 +27,7 @@ if (ischar(newx) && strcmp(type,'fit'))
     type = 'coefficients';
 end
 
+%% retrieve data do prediction based on distribution
 path = object(3).lb;
 a0 = object(4).lb;
 if (ischar(t))
@@ -105,6 +107,7 @@ else
     end
 end
 
+%% build 'predict' class object
 field = 'predict';
 if (strcmp(type,'coefficients'))
     predict = 'm';

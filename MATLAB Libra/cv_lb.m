@@ -24,6 +24,7 @@ function object = cv_lb(X,y,kappa,alpha,K,tlist,nt,trate,family,group,intercept,
 % Output: 
 % A structure array is returned. The array contains a vector of parameter t, crossvalidation error cv_error, and the estimated standard deviation for it cv_sd
 
+%% check if there are undetermined values
 if (ischar(K))
     K = 5;
 end
@@ -52,6 +53,7 @@ if (ischar(se))
     se = true;
 end
 
+%% check if inputs are elligible
 if (size(X,1) == 1 || size(X,2) == 1)
     error('X must be a matrix!')
 end
@@ -120,6 +122,7 @@ if (group)
     end
 end
 
+%% initialize and generate folds
 n = size(X,1);
 si = floor(n/K);
 mo = n-K*si;
@@ -145,7 +148,7 @@ if (tlist == 'm')
     tlist = obj(7).lb;
 end
 
-
+%% run the lb algorithm and do cross validation
 residmat = zeros(length(tlist),K);
 for i = 1:K
     omit = folds(i).group;
@@ -211,6 +214,7 @@ end
 cv_error = sum(residmat,2)/size(residmat,2);
 cv_sd = sqrt(var(residmat,0,2)/K);
 
+%% plot and generate 'cv_lb' class object
 if (plot_it)
     plot(tlist,cv_error)
     xlabel('t')
@@ -221,7 +225,7 @@ if (se)
     plot([tlist;tlist],[cv_error'+cv_sd';cv_error'-cv_sd'],'r')
 end
 
-field = 'lb';
+field = 'cv_lb';
 value = {tlist,cv_error,cv_sd};
 object = struct(field,value);
 end
